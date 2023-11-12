@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gook_toon/models/webtoon.dart';
+import 'package:gook_toon/screen/webtoon_detail.dart';
 import 'package:gook_toon/service/api_service.dart';
 import 'package:gook_toon/widget/webtoon_card.dart';
 
@@ -40,6 +41,19 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  void switchWebtoonDetail(BuildContext context, WebtoonModel webtoon) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WebtoonDetail(
+          id: webtoon.id,
+          title: webtoon.title,
+          thumbnail: webtoon.thumb,
+        ),
+      ),
+    );
+  }
+
   ListView makeToonList(AsyncSnapshot<List<WebtoonModel>> snapshot) {
     return ListView.separated(
       itemCount: snapshot.data!.length,
@@ -52,12 +66,17 @@ class HomeScreen extends StatelessWidget {
         var webtoon = snapshot.data![index];
         return Column(
           children: [
-            Hero(
-              tag: webtoon.id,
-              child: WebtoonCard(
-                id: webtoon.id,
-                title: webtoon.title,
-                thumbnail: webtoon.thumb,
+            GestureDetector(
+              onTap: () {
+                switchWebtoonDetail(context, webtoon);
+              },
+              child: Hero(
+                tag: webtoon.id,
+                child: WebtoonCard(
+                  id: webtoon.id,
+                  title: webtoon.title,
+                  thumbnail: webtoon.thumb,
+                ),
               ),
             ),
             const SizedBox(height: 10),
