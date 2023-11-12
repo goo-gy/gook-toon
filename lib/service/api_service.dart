@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:gook_toon/models/webtoon.dart';
+import 'package:gook_toon/models/webtoon_detail.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
@@ -9,8 +10,8 @@ class ApiService {
   static const String todayApi = "today";
 
   static Future<List<WebtoonModel>> getTodaysToons() async {
-    final todayApiUrl = Uri.parse(baseUrl + todayApi);
-    final response = await http.get(todayApiUrl);
+    final url = Uri.parse(baseUrl + todayApi);
+    final response = await http.get(url);
     if (response.statusCode == 200) {
       List<dynamic> webtoonsJson = jsonDecode(response.body);
       final webtoons = webtoonsJson
@@ -19,6 +20,18 @@ class ApiService {
           )
           .toList();
       return webtoons;
+    } else {
+      print("Status: ${response.statusCode}");
+      throw Error();
+    }
+  }
+
+  static Future<WebtoonDetailModel> getToonById(String id) async {
+    final url = Uri.parse(baseUrl + id);
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      dynamic webtoonsJson = jsonDecode(response.body);
+      return WebtoonDetailModel.fromJson(webtoonsJson);
     } else {
       print("Status: ${response.statusCode}");
       throw Error();
