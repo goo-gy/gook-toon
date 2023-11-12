@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gook_toon/widget/webtoon_card.dart';
 
 class WebtoonDetail extends StatelessWidget {
   final String id, title, thumbnail;
@@ -24,6 +25,22 @@ class WebtoonDetail extends StatelessWidget {
           elevation: 1,
         ),
         backgroundColor: Colors.white,
-        body: Container());
+        body: Container(
+          child: Column(
+            children: [
+              const SizedBox(height: 50),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Hero(
+                    tag: id,
+                    child:
+                        WebtoonCard(title: title, thumbnail: thumbnail, id: id),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ));
   }
 }
