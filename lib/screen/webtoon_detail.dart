@@ -38,7 +38,15 @@ class WebtoonDetail extends StatelessWidget {
                         WebtoonCard(title: title, thumbnail: thumbnail, id: id),
                   ),
                 ],
-              )
+              ),
+              const SizedBox(height: 10),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ],
           ),
         ));
