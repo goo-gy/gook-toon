@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gook_toon/models/webtoon_detail.dart';
+import 'package:gook_toon/models/webtoon_episode.dart';
 import 'package:gook_toon/service/api_service.dart';
+import 'package:gook_toon/widget/episode_card.dart';
 import 'package:gook_toon/widget/webtoon_card.dart';
 
 class WebtoonDetail extends StatefulWidget {
@@ -19,10 +21,12 @@ class WebtoonDetail extends StatefulWidget {
 
 class _WebtoonDetailState extends State<WebtoonDetail> {
   late Future<WebtoonDetailModel> webtoon;
+  late Future<List<WebtoonEpisodeModel>> episodes;
 
   @override
   void initState() {
     webtoon = ApiService.getToonById(widget.id);
+    episodes = ApiService.getEpisodesByToonId(widget.id);
     super.initState();
   }
 
@@ -37,6 +41,23 @@ class _WebtoonDetailState extends State<WebtoonDetail> {
           snapshot.data!.about,
           style: const TextStyle(fontSize: 16),
         ),
+      );
+    }
+    return const Center(child: CircularProgressIndicator());
+  }
+
+  Widget episodesFutureBuilder(context, snapshot) {
+    if (snapshot.hasData) {
+      return Column(
+        children: [
+          for (var episode in snapshot.data!)
+            Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 5,
+                  horizontal: 20,
+                ),
+                child: EpisodeCard(episode: episode)),
+        ],
       );
     }
     return const Center(child: CircularProgressIndicator());
@@ -77,7 +98,12 @@ class _WebtoonDetailState extends State<WebtoonDetail> {
               FutureBuilder(
                 future: webtoon,
                 builder: webtoonFutureBuilder,
-              )
+              ),
+              const SizedBox(height: 50),
+              FutureBuilder(
+                future: episodes,
+                builder: episodesFutureBuilder,
+              ),
             ],
           ),
         ));
